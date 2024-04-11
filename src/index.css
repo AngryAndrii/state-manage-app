@@ -1,0 +1,14 @@
+:root {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+body {
+    padding-top: 20px;
+    padding-left: 50px;
+}
+ul {
+    padding-left: 0;
+}
+.del {
+    background-color: rgba(217, 15, 15, 0.523);
+}

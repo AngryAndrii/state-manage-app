@@ -1,12 +1,25 @@
 import { useState } from "react";
-import tasks from "./tasks";
 
 function App() {
-  console.log(tasks);
-  const [taskList, setTaskList] = useState(tasks);
+  const [taskList, setTaskList] = useState([]);
+  const [inputText, setInputText] = useState("");
+  const [count, setCount] = useState(1);
+
   const taskAddFunction = (e) => {
-    event.preventDefault();
-    console.log(e.target);
+    e.preventDefault();
+    setCount((prev) => {
+      return prev + 1;
+    });
+    const task = {
+      id: count,
+      content: inputText,
+    };
+    setTaskList((prev) => [...prev, task]);
+    setInputText("");
+  };
+
+  const inputChange = (e) => {
+    setInputText(e.target.value);
   };
 
   return (
@@ -17,15 +30,21 @@ function App() {
           taskAddFunction(e);
         }}
       >
-        <input type="text" />
+        <input
+          type="text"
+          value={inputText}
+          onChange={(e) => {
+            inputChange(e);
+          }}
+        />
         <button type="submit">Add</button>
       </form>
-
       <ul>
         {taskList.map((el) => {
           return (
             <li key={el.id}>
-              {el.id} {el.content} <button>Delete</button> <button>Done</button>
+              {el.id} {el.content} <button className="del">Delete</button>
+              <button>Done</button>
             </li>
           );
         })}
