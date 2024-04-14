@@ -1,20 +1,15 @@
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { addTask, deleteTask } from "./redux/tasksReducer";
 
 function App() {
-  const [taskList, setTaskList] = useState([]);
   const [inputText, setInputText] = useState("");
-  const [count, setCount] = useState(1);
+  const tasks = useSelector((state) => state.tasks);
+  const dispatch = useDispatch();
 
-  const taskAddFunction = (e) => {
+  const addTaskToList = (e) => {
     e.preventDefault();
-    setCount((prev) => {
-      return prev + 1;
-    });
-    const task = {
-      id: count,
-      content: inputText,
-    };
-    setTaskList((prev) => [...prev, task]);
+    dispatch(addTask(inputText));
     setInputText("");
   };
 
@@ -22,12 +17,16 @@ function App() {
     setInputText(e.target.value);
   };
 
+  const deleteTaskFromList = (id) => {
+    dispatch(deleteTask(id));
+  };
+
   return (
     <>
       <form
         action=""
         onSubmit={(e) => {
-          taskAddFunction(e);
+          addTaskToList(e);
         }}
       >
         <input
@@ -40,10 +39,18 @@ function App() {
         <button type="submit">Add</button>
       </form>
       <ul>
-        {taskList.map((el) => {
+        {tasks.map((el) => {
           return (
             <li key={el.id}>
-              {el.id} {el.content} <button className="del">Delete</button>
+              {el.task}
+              <button
+                className="del"
+                onClick={() => {
+                  deleteTaskFromList(el.id);
+                }}
+              >
+                Delete
+              </button>
               <button>Done</button>
             </li>
           );
