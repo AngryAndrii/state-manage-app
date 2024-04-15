@@ -1,85 +1,73 @@
-// import { useState } from "react";
-// import { useSelector, useDispatch } from "react-redux";
-// import { addTask, deleteTask } from "./redux/tasksReducer";
-
-// function App() {
-//   const [inputText, setInputText] = useState("");
-//   const tasks = useSelector((state) => state.tasks);
-//   const dispatch = useDispatch();
-
-//   const addTaskToList = (e) => {
-//     e.preventDefault();
-//     dispatch(addTask(inputText));
-//     setInputText("");
-//   };
-
-//   const inputChange = (e) => {
-//     setInputText(e.target.value);
-//   };
-
-//   const deleteTaskFromList = (id) => {
-//     dispatch(deleteTask(id));
-//   };
-
-//   return (
-//     <>
-//       <form
-//         action=""
-//         onSubmit={(e) => {
-//           addTaskToList(e);
-//         }}
-//       >
-//         <input
-//           type="text"
-//           value={inputText}
-//           onChange={(e) => {
-//             inputChange(e);
-//           }}
-//         />
-//         <button type="submit">Add</button>
-//       </form>
-//       <ul>
-//         {tasks.map((el) => {
-//           return (
-//             <li key={el.id}>
-//               {el.task}
-//               <button
-//                 className="del"
-//                 onClick={() => {
-//                   deleteTaskFromList(el.id);
-//                 }}
-//               >
-//                 Delete
-//               </button>
-//               <button>Done</button>
-//             </li>
-//           );
-//         })}
-//       </ul>
-//     </>
-//   );
-// }
-
-// export default App;
-
+import { useState } from "react";
+import { uid } from "uid";
 import { create } from "zustand";
 
-const useStore = create((set) => ({
-  bears: 0,
-  increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
-  removeAllBears: () => set({ bears: 0 }),
-  updateBears: (newBears) => set({ bears: newBears }),
-}));
+function App() {
+  const [inputText, setInputText] = useState("");
 
-const App = () => {
-  const bears = useStore((state) => state.bears);
-  const increasePopulation = useStore((state) => state.increasePopulation);
+  const useTasks = create((set) => ({
+    tasks: [],
+    addTask: (text) =>
+      set((state) => {
+        const newTask = { id: uid(), task: text };
+        return { tasks: [...state.tasks, newTask] };
+      }),
+  }));
+
+  const addTask = useTasks((state) => state.addTask);
+  const tasks = useTasks((state) => state.tasks);
+
+  const addTaskToList = (e) => {
+    e.preventDefault();
+    addTask(inputText);
+    setInputText("");
+  };
+
+  const inputChange = (e) => {
+    setInputText(e.target.value);
+  };
+
+  const deleteTaskFromList = (id) => {
+    dispatch(deleteTask(id));
+  };
+
   return (
     <>
-      <h1>{bears} around here...</h1>
-      <button onClick={increasePopulation}>one up</button>
+      <form
+        action=""
+        onSubmit={(e) => {
+          addTaskToList(e);
+        }}
+      >
+        <input
+          type="text"
+          value={inputText}
+          onChange={(e) => {
+            inputChange(e);
+          }}
+        />
+        <button type="submit">Add</button>
+      </form>
+      <ul>
+        {tasks.map((el) => {
+          return (
+            <li key={el.id}>
+              {el.task}
+              <button
+                className="del"
+                onClick={() => {
+                  deleteTaskFromList(el.id);
+                }}
+              >
+                Delete
+              </button>
+              <button>Done</button>
+            </li>
+          );
+        })}
+      </ul>
     </>
   );
-};
+}
 
 export default App;
