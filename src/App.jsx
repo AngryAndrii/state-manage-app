@@ -2,36 +2,36 @@ import { useState } from "react";
 import { uid } from "uid";
 import { create } from "zustand";
 
-function App() {
+const useStore = create((set) => ({
+  tasks: [
+    { id: "fdsfs", task: "do something" },
+    { id: "kokn", task: "do something else" },
+  ],
+  addTask: (text) =>
+    set((state) => ({
+      tasks: [...state.tasks, { id: uid(), task: text }],
+    })),
+  deleteTask: (id) =>
+    set((state) => ({
+      tasks: [...state.tasks, { id: uid(), task: text }],
+    })),
+}));
+
+export default function App() {
   const [inputText, setInputText] = useState("");
-
-  const useStore = create((set) => ({
-    tasks: [
-      { id: "fdfsdfsdf", task: "lolo lolo lo" },
-      { id: "dwefe", task: "roooo koko ko" },
-    ],
-    count: 0,
-    addTask: (text) =>
-      set((state) => ({
-        tasks: [{ id: uid(), task: text }, ...state.tasks],
-      })),
-    plus: () => set((state) => ({ count: state.count + 1 })),
-  }));
-
-  const addTask = useStore((state) => state.addTask);
-  const tasks = useStore((state) => state.tasks);
-
-  const { count, plus } = useStore();
-
-  const addTaskToList = (e) => {
-    e.preventDefault();
-    plus;
-    addTask({ text: inputText });
-    setInputText("");
-  };
+  const { addTask, tasks } = useStore();
 
   const inputChange = (e) => {
     setInputText(e.target.value);
+  };
+
+  const addTaskToList = (e) => {
+    e.preventDefault();
+    if (inputText == "") {
+      return;
+    }
+    addTask(inputText);
+    setInputText("");
   };
 
   return (
@@ -51,7 +51,6 @@ function App() {
         />
         <button type="submit">Add</button>
       </form>
-      <div>{count}</div>
       <ul>
         {tasks.map((el) => {
           return (
@@ -66,25 +65,3 @@ function App() {
     </>
   );
 }
-
-export default App;
-
-// const useStore = create((set) => ({
-//   count: 0,
-//   plus: () => set((state) => ({ count: state.count + 1 })),
-// }));
-
-// export default function App() {
-//   const { plus, count } = useStore();
-
-//   return (
-//     <main>
-//       <h2>{count}</h2>
-//       <div className="btn-box">
-//         <button onClick={plus} className="btn decrement">
-//           +
-//         </button>
-//       </div>
-//     </main>
-//   );
-// }
