@@ -1,21 +1,24 @@
 import { useState } from "react";
+import { uid } from "uid";
 
 function App() {
   const [taskList, setTaskList] = useState([]);
   const [inputText, setInputText] = useState("");
-  const [count, setCount] = useState(1);
 
   const taskAddFunction = (e) => {
     e.preventDefault();
-    setCount((prev) => {
-      return prev + 1;
-    });
     const task = {
-      id: count,
+      id: uid(),
       content: inputText,
     };
     setTaskList((prev) => [...prev, task]);
     setInputText("");
+  };
+
+  const deleteTaskFunction = (taskId) => {
+    return taskList.filter((el) => {
+      el.id !== taskId;
+    });
   };
 
   const inputChange = (e) => {
@@ -43,8 +46,15 @@ function App() {
         {taskList.map((el) => {
           return (
             <li key={el.id}>
-              {el.id} {el.content} <button className="del">Delete</button>
-              <button>Done</button>
+              {el.content}
+              <button
+                className="del"
+                onClick={() => {
+                  deleteTaskFunction(el.id);
+                }}
+              >
+                Delete
+              </button>
             </li>
           );
         })}
