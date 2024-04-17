@@ -1,11 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { uid } from "uid";
 
-const tasks = [];
-
 const slice = createSlice({
   name: "tasks",
-  initialState: tasks,
+  initialState: [],
   reducers: {
     addTask(state, action) {
       state.push({

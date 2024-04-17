@@ -51,7 +51,6 @@ function App() {
               >
                 Delete
               </button>
-              <button>Done</button>
             </li>
           );
         })}
