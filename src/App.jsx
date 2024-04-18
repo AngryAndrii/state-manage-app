@@ -16,9 +16,7 @@ function App() {
   };
 
   const deleteTaskFunction = (taskId) => {
-    return taskList.filter((el) => {
-      el.id !== taskId;
-    });
+    setTaskList(taskList.filter((el) => el.id !== taskId));
   };
 
   const inputChange = (e) => {
@@ -28,7 +26,6 @@ function App() {
   return (
     <>
       <form
-        action=""
         onSubmit={(e) => {
           taskAddFunction(e);
         }}
