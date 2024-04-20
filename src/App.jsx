@@ -1,18 +1,27 @@
 import { useState } from "react";
 import { uid } from "uid";
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 
-const useStore = create((set) => ({
-  tasks: [],
-  addTask: (text) =>
-    set((state) => ({
-      tasks: [...state.tasks, { id: uid(), task: text }],
-    })),
-  deleteTask: (id) =>
-    set((state) => ({
-      tasks: state.tasks.filter((task) => task.id !== id),
-    })),
-}));
+const useStore = create(
+  persist(
+    (set) => ({
+      tasks: [],
+      addTask: (text) =>
+        set((state) => ({
+          tasks: [...state.tasks, { id: uid(), task: text }],
+        })),
+      deleteTask: (id) =>
+        set((state) => ({
+          tasks: state.tasks.filter((task) => task.id !== id),
+        })),
+    }),
+    {
+      name: "task-storage",
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);
 
 export default function App() {
   const [inputText, setInputText] = useState("");
